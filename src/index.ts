@@ -10,7 +10,7 @@ import { hideBin } from 'yargs/helpers';
 const optionsPromise = yargs(hideBin(process.argv)).option('endpoint', {
 	alias: 'e',
 	type: 'string',
-	default: 'wss://kusama-rpc.polkadot.io',
+	default: 'wss://statemine-rpc.polkadot.io',
 	description: 'the wss endpoint. It must allow unsafe RPCs.',
 	required: true
 }).argv;
@@ -26,7 +26,7 @@ async function main() {
 		).toHuman()} [ss58: ${api.registry.chainSS58}] ******************`
 	);
 
-	await getRecentBlocks(api, 200);
+	await getRecentBlocks(api, 256);
 	// await which_pallets(api);
 	// await read_const(api);
 	// await subscribe_finalized_blocks(api);
@@ -36,33 +36,27 @@ async function main() {
 
 async function getRecentBlocks(api: ApiPromise, count: number) {
 	const lastBlockNumber = await api.derive.chain.bestNumber();
-	// const maxProofSize = 18_446_744_073_709_551_615; // u64::max_value()
-	const maxRefTime = 2_000_000_000_000; // 2 seconds
-	let maxIdeal = 0;
-	let minIdeal = 18_446_744_073_709_551_615;
-	let sumIdeal = 0;
+	const maxProofSize = 5 * 1024 * 1024; // 5 MB
+	const maxRefTime = 500_000_000_000; // 0.5 seconds
+
 	// normal percentage ref time, if we equal same ref time, what would be max proof size.
-	console.log(`Block | ref time | proof size | Block fullness | Ideal max proof`);
+	console.log(`| Block | fullness by ref time | fullness by proof size |`);
+	console.log(`| ---- | ---- | ---- |`);
 	for (let i = lastBlockNumber.toNumber(); i > lastBlockNumber.toNumber() - count; i--) {
 		const blockHash = await api.rpc.chain.getBlockHash(i);
 		const apiAt = await api.at(blockHash);
 		const blockWeight = await apiAt.query.system.blockWeight();
 
 		const blockFullnessRefTime = (blockWeight.normal.refTime.toNumber() * 100) / maxRefTime;
-		const idealMaxProofSize =
-			(blockWeight.normal.proofSize.toNumber() * 100) / blockFullnessRefTime;
+		const blockFullnessProofSize = (blockWeight.normal.proofSize.toNumber() * 100) / maxProofSize;
 
-		if (idealMaxProofSize > 0) {
-			console.log(
-				`${i} | ${blockWeight.normal.refTime} | ${blockWeight.normal.proofSize} | ${blockFullnessRefTime} | ${idealMaxProofSize}`
-			);
-			maxIdeal = Math.max(maxIdeal, idealMaxProofSize);
-			minIdeal = Math.min(minIdeal, idealMaxProofSize);
-			sumIdeal += idealMaxProofSize;
+        if (blockWeight.normal.refTime.toNumber() || blockWeight.normal.proofSize.toNumber() > 0) {
+		    console.log(
+			    `${i} | ${blockFullnessRefTime} % | ${blockFullnessProofSize} %`
+		    );
 		}
 	}
 
-	console.log(`Max ideal: ${maxIdeal} | Min ideal: ${minIdeal} | Avg ideal: ${sumIdeal / count}`);
 }
 
 async function subscribe_finalized_blocks(api: ApiPromise) {
