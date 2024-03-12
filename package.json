@@ -4,8 +4,8 @@
 	"description": "A template project to kickstart hacking on top of @polkadot/api, using typescript",
 	"main": "./build/index.js",
 	"scripts": {
-		"run": "./node_modules/.bin/ts-node ./src/index.ts",
-		"run:dev": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/index.ts",
+		"main": "./node_modules/.bin/ts-node ./src/index.ts",
+		"main:dev": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/index.ts",
 		"build": "npm run clean && ./node_modules/.bin/tsc --pretty --declaration",
 		"build:dev": "./node_modules/.bin/tsc --pretty --declaration --watch",
 		"clean": "./node_modules/.bin/rimraf build",

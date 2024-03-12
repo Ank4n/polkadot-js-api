@@ -1,6 +1,8 @@
 # polkadot-js-api-ts-template
 
-My personal, beloved template to quickly start hacking in top of any substrate based chain with
-`@polkadot/api`.
+Run with 
+```bash
+yarn run main -e "wss://polkadot-rpc.dwellir.com"
+```
 
 See [`package.json`](./package.json) to see what's up 🔥🔥.
