@@ -58,9 +58,9 @@ async function corrupt_ledgers(api: ApiPromise) {
 			//
 			console.log(
 				'\x1b[31m%s\x1b[0m',
-				`⚙️  ⚙️  ⚙️  is_validator controller: ${validators.includes(
-					controller.toHuman()?.toString()
-				)} | stash ${validators.includes(stash.toHuman()?.toString())}`
+				`⚙️  ⚙️  ⚙️  Is stash account ${stash} validator: ${validators.includes(
+					stash.toHuman()?.toString()
+				)}`
 			);
 
 			await when_ledger_corruption(
