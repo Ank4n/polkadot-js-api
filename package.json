@@ -5,6 +5,8 @@
 	"main": "./build/index.js",
 	"scripts": {
 		"main": "./node_modules/.bin/ts-node ./src/index.ts",
+		"test:corrupt_ledgers": "./node_modules/.bin/ts-node src/corrupt_ledgers.ts",
+		"test:double_bonded": "./node_modules/.bin/ts-node src/double_bonded.ts",
 		"main:dev": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/index.ts",
 		"build": "npm run clean && ./node_modules/.bin/tsc --pretty --declaration",
 		"build:dev": "./node_modules/.bin/tsc --pretty --declaration --watch",
