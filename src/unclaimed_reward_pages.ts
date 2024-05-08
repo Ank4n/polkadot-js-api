@@ -33,12 +33,17 @@ async function main() {
 
 	const current_era = (await api.query.staking.currentEra()).unwrap().toNumber();
 	console.log(`Current era: ${current_era}`);
-	console.log(`Looking at era: ${options.era}`);
+	let era = options.era;
+	if (era == -1) {
+		console.log(`No era specified. Using current era: ${current_era}`);
+		era = current_era;
+	}
 
+	console.log(`Looking at era: ${era}`);
 	console.log(`** Looking at legacy exposures **`);
-	await legacyExposures(apiAt, options.era);
+	await legacyExposures(apiAt, era);
 	console.log(`** Looking at paged exposures **`);
-	await pagedExposures(apiAt, options.era);
+	await pagedExposures(apiAt, era);
 
 	process.exit(0);
 }
