@@ -41,35 +41,36 @@ async function corrupt_ledgers(api: ApiPromise) {
 
 	const validators = await get_all_validators(apiAt);
 	const all_ledgers = await get_all_ledgers(apiAt);
+	let count = 0;
+	let validator_count = 0;
 
 	for (const [stash, controller] of await apiAt.query.staking.bonded.entries()) {
 		// console.log(`Checking: ${controller.toHuman()} | ${stash.toHuman()}`);
 		const ledger = all_ledgers.get(controller.toHuman()?.toString());
-
 		if (
 			ledger == undefined ||
 			ledger.isNone ||
 			ledger.unwrap().stash.toHuman() != stash.toHuman()
 		) {
-			// console.log(
-			// 	'\n\n\x1b[36m%s\x1b[0m',
-			// 	`🙈 🙉 🙊 Corrupt ledger found for controller: ${controller.toHuman()} | stash: ${stash.toHuman()}`
-			// );
-			//
-			console.log(
-				'\x1b[31m%s\x1b[0m',
-				`⚙️  ⚙️  ⚙️  Corrupt ledger for stash account ${stash} (is_validator: ${validators.includes(
-					stash.toHuman()?.toString()
-				)}) with controller: ${controller.toHuman()}`
-			);
-
+			count += 1;
 			await when_ledger_corruption(
 				api,
 				stash.toHuman()?.toString() ?? '',
 				controller.toHuman()?.toString() ?? ''
 			);
+
+			if (validators.includes(stash.toHuman()?.toString())) {
+				console.log(
+					'\x1b[31m%s\x1b[0m',
+					`⚙️  ⚙️  ⚙️  stash ${stash.toHuman()?.toString()} is also a validator. `
+				);
+				validator_count += 1;
+			}
 		}
 	}
+
+	console.log('Total corrupt ledgers: ', count);
+	console.log('Total corrupt validator ledgers: ', validator_count);
 }
 
 async function get_all_validators(apiAt: ApiDecoration<'promise'>) {

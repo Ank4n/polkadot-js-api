@@ -7,6 +7,7 @@
 		"main": "./node_modules/.bin/ts-node ./src/index.ts",
 		"test:corrupt_ledgers": "./node_modules/.bin/ts-node src/corrupt_ledgers.ts",
 		"test:double_bonded": "./node_modules/.bin/ts-node src/double_bonded.ts",
+		"test:unclaimed_reward_pages": "./node_modules/.bin/ts-node src/unclaimed_reward_pages.ts",
 		"main:dev": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/index.ts",
 		"build": "npm run clean && ./node_modules/.bin/tsc --pretty --declaration",
 		"build:dev": "./node_modules/.bin/tsc --pretty --declaration --watch",
@@ -15,7 +16,7 @@
 		"lint": "eslint . --ext .ts --fix",
 		"format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
 	},
-	"author": "@kianenigma",
+	"author": "@ank4n",
 	"license": "ISC",
 	"devDependencies": {
 		"@babel/cli": "^7.20.7",
@@ -37,7 +38,7 @@
 		"rimraf": "^4.1.2"
 	},
 	"dependencies": {
-		"@polkadot/api": "9.13.5",
+		"@polkadot/api": "11.0.2",
 		"yargs": "^17.6.2"
 	}
 }
