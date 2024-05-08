@@ -40,28 +40,51 @@ async function main() {
 	}
 
 	console.log(`Looking at era: ${era}`);
-	console.log(`** Looking at legacy exposures **`);
-	await legacyExposures(apiAt, era);
-	console.log(`** Looking at paged exposures **`);
-	await pagedExposures(apiAt, era);
+	const legacy_unclaimed = await legacyExposures(apiAt, era);
+	console.log(
+		`Found ${legacy_unclaimed.length} unclaimed validator rewards from legacy exposures.`
+	);
+	console.log(legacy_unclaimed);
+
+	const paged_unclaimed = await pagedExposures(apiAt, era);
+	console.log(`Found ${paged_unclaimed.length} unclaimed validator rewards from paged exposures.`);
+	console.log(paged_unclaimed);
 
 	process.exit(0);
 }
 
+interface rewardsClaimed {
+	stash: string;
+	page_count: number;
+	claimed_pages: number[];
+}
+
 async function legacyExposures(api: ApiDecoration<'promise'>, era: number) {
+	const unclaimed_stashes: rewardsClaimed[] = [];
 	const exposure_keys = await api.query.staking.erasStakers.keys(era);
-	exposure_keys.map(
-		async ({ args: [era, stash] }) => await isRewardsClaimed(api, stash.toString(), era.toNumber())
-	);
+	for (const {
+		args: [era, stash]
+	} of exposure_keys) {
+		const result = await isRewardsClaimed(api, stash.toString(), era.toNumber());
+		if (result) {
+			unclaimed_stashes.push(result);
+		}
+	}
+	return unclaimed_stashes;
 }
 
 async function pagedExposures(api: ApiDecoration<'promise'>, era: number) {
+	const unclaimed_stashes: rewardsClaimed[] = [];
 	const exposure_keys = await api.query.staking.erasStakersOverview.keys(era);
 	for (const {
 		args: [era, stash]
 	} of exposure_keys) {
-		await isRewardsClaimed(api, stash.toString(), era.toNumber());
+		const result = await isRewardsClaimed(api, stash.toString(), era.toNumber());
+		if (result) {
+			unclaimed_stashes.push(result);
+		}
 	}
+	return unclaimed_stashes;
 }
 
 async function isRewardsClaimed(api: ApiDecoration<'promise'>, stash: string, era: number) {
@@ -76,8 +99,8 @@ async function isRewardsClaimed(api: ApiDecoration<'promise'>, stash: string, er
 	// console.log(`legacyClaimedRewards: ${legacyClaimedRewards}`);
 
 	if (legacyClaimedRewards) {
-		console.log(`page count: 1, rewards claimed!!`);
-		return;
+		// console.log(`page count: 1, rewards claimed!!`);
+		return { stash: stash, page_count: 1, claimed_pages: [0] };
 	}
 
 	const pagedExposures = await api.query.staking.erasStakersOverview(era, stash);
@@ -89,10 +112,15 @@ async function isRewardsClaimed(api: ApiDecoration<'promise'>, stash: string, er
 
 	const unclaimed_page_count = page_count - claimedRewards.length;
 	if (unclaimed_page_count > 0) {
-		console.log(
-			`\nEra: ${era}, stash: ${stash}, total page count: ${page_count}, claimed_pages: ${claimedRewards}.`
-		);
-		console.log(`Unclaimed pages: ${unclaimed_page_count}\n`);
+		// console.log(
+		// 	`\nEra: ${era}, stash: ${stash}, total page count: ${page_count}, claimed_pages: ${claimedRewards}.`
+		// );
+		// console.log(`Unclaimed pages: ${unclaimed_page_count}\n`);
+		return {
+			stash: stash,
+			page_count: page_count,
+			claimed_pages: claimedRewards.map((p) => p.toNumber())
+		};
 	}
 }
 
