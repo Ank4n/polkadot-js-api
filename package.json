@@ -8,6 +8,8 @@
 		"test:corrupt_ledgers": "./node_modules/.bin/ts-node src/corrupt_ledgers.ts",
 		"test:double_bonded": "./node_modules/.bin/ts-node src/double_bonded.ts",
 		"test:unclaimed_reward_pages": "./node_modules/.bin/ts-node src/unclaimed_reward_pages.ts",
+		"test:binary_search": "./node_modules/.bin/ts-node src/binary_search.ts",
+		"test:lock": "./node_modules/.bin/ts-node src/locked_lower_than_stake.ts",
 		"main:dev": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/index.ts",
 		"build": "npm run clean && ./node_modules/.bin/tsc --pretty --declaration",
 		"build:dev": "./node_modules/.bin/tsc --pretty --declaration --watch",
@@ -38,7 +40,7 @@
 		"rimraf": "^4.1.2"
 	},
 	"dependencies": {
-		"@polkadot/api": "11.0.2",
+		"@polkadot/api": "12.3.1",
 		"yargs": "^17.6.2"
 	}
 }
