@@ -3,7 +3,6 @@ import '@polkadot/api-augment';
 import '@polkadot/types-augment';
 
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { ApiDecoration } from '@polkadot/api/types';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -29,9 +28,38 @@ async function main() {
 		}] ******************`
 	);
 
-	const account = '13UVJyLnbVp8c4FQeiGSxDUduwCoBXMRmJWdA4oVxsiyLckd';
-	await when_consumer_eq(api, account, 3);
+	const pool_id = api.createType('u32', 168);
+	const points = api.createType('Balance', 1000000000000);
 
+	const start = 69490060;
+	const end = 69490065;
+	let mid = end;
+	console.log(`End: ${end}`);
+
+	while (start <= mid) {
+		mid = mid - 1;
+		console.log(`Mid: ${mid}`);
+		const hash = await api.rpc.chain.getBlockHash(mid);
+		const midApi = await api.at(hash);
+		try {
+			const result = await midApi.call.nominationPoolsApi.balanceToPoints(pool_id, points);
+
+			if (result.toNumber() == points.toNumber()) {
+				console.log(
+					'\x1b[39m%s\x1b[0m',
+					` ⚠️ points ${points}, balance ${result} at block: ${mid}`
+				);
+				break;
+			}
+
+			console.log('\x1b[36m%s\x1b[0m', ` ⚠️ points ${points}, balance ${result} at block: ${mid}`);
+		} catch (e) {
+			// start = mid + 1;
+			// continue;
+		}
+	}
+
+	console.log('\x1b[36m%s\x1b[0m', ` ⚠️ END!! start: ${start}, end ${end}`);
 	process.exit(0);
 }
 
