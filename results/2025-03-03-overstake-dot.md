@@ -1,5 +1,5 @@
 Chain: Polkadot
-Command: ` yarn run test:overstake -e ws://localhost:9900`
+Command: `yarn run test:overstake`
 ...
 
 ## Overstake table
