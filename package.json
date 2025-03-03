@@ -12,6 +12,8 @@
 		"test:lock": "./node_modules/.bin/ts-node src/locked_lower_than_stake.ts",
 		"main:dev": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/index.ts",
 		"bounded:rewards-page-dist": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/rewards-page-dist.ts",
+		"bounded:slashing-spans": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/slashing-spans.ts",
+		"test:overstake": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/overstake.ts",
 		"build": "npm run clean && ./node_modules/.bin/tsc --pretty --declaration",
 		"build:dev": "./node_modules/.bin/tsc --pretty --declaration --watch",
 		"clean": "./node_modules/.bin/rimraf build",
