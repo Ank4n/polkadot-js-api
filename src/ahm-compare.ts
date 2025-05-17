@@ -46,14 +46,13 @@ async function main() {
 		).toHuman()} [ss58: ${wah_api.registry.chainSS58}] ******************`
 	);
 
-	const pallets = ['staking', 'nominationPools', 'fastUnstake'];
+	const pallets = ['staking', 'nominationPools', 'fastUnstake', 'treasury'];
 
+	console.log(`## Westend\n`);
 	for (const pallet of pallets) {
-		console.log(`\n*************** ${pallet} ***************`);
+		console.log(`### ${pallet}\n`);
 		const westend_palletFn = (westend_apiAt.query as any)[pallet];
-		const wah_palletFn = (wah_apiAt.query as any)[pallet];
 
-		console.log(`\n=============== Westend ===============`);
 		for (const [name, _item] of Object.entries(westend_palletFn)) {
 			const storageFn = (westend_palletFn as any)[name];
 
@@ -71,8 +70,15 @@ async function main() {
 				}
 			}
 		}
+	}
 
-		console.log(`\n=============== Asset Hub ===============`);
+	console.log(`---\n`);
+	console.log(`## Asset Hub`);
+
+	for (const pallet of pallets) {
+		console.log(`### ${pallet}`);
+		const wah_palletFn = (wah_apiAt.query as any)[pallet];
+
 		for (const [name, _item] of Object.entries(wah_palletFn)) {
 			const storageFn = (wah_palletFn as any)[name];
 
@@ -91,6 +97,7 @@ async function main() {
 			}
 		}
 	}
+
 	process.exit(0);
 }
 
