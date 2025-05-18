@@ -103,7 +103,7 @@ async function main() {
 						const first = map.get(map_key);
 						const second = keys.length;
 						if (first !== second) {
-							console.log(`⚠️ ⚠️ ${map_key}: value changed from <${first}> to <${second}>`);
+							console.log(`⚠️ ⚠️ ${map_key}: size changed from <${first}> to <${second}>`);
 						}
 						// console.log(`${name}: ${keys.length} items`);
 					} else {
