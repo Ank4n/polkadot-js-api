@@ -15,6 +15,7 @@
 		"bounded:slashing-spans": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/slashing-spans.ts",
 		"test:overstake": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/overstake.ts",
 		"test:ahm-compare": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node src/ahm-compare.ts",
+		"test:ahm-compare-vesting": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node src/ahm-compare-vesting.ts",
 		"build": "npm run clean && ./node_modules/.bin/tsc --pretty --declaration",
 		"build:dev": "./node_modules/.bin/tsc --pretty --declaration --watch",
 		"clean": "./node_modules/.bin/rimraf build",
