@@ -1,5 +1,10 @@
 # polkadot-js-api-ts-template
 
+Prerequisite
+```bash
+yarn install
+```
+
 Run with 
 ```bash
 yarn run main -e "wss://polkadot-rpc.dwellir.com"
